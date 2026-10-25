@@ -1,0 +1,16 @@
+[package]
+name = "focus-blocker-bridge"
+version = "1.0.0"
+edition = "2024"
+license = "MIT"
+description = "Low-overhead local configuration bridge for Focus Blocker"
+
+[dependencies]
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"

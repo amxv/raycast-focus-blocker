@@ -1,0 +1,47 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "focus-blocker",
+  "version": "1.0.0",
+  "title": "Focus Blocker",
+  "description": "Block distracting sites and specific URLs, with instant control from Raycast.",
+  "icon": "icon.png",
+  "author": "amxv",
+  "license": "MIT",
+  "platforms": ["macOS"],
+  "categories": ["Productivity"],
+  "keywords": ["focus", "block websites", "youtube shorts", "distractions", "site blocker"],
+  "engines": {"node": ">=22.14.0"},
+  "scripts": {
+    "dev": "ray develop",
+    "build": "ray build -e dist",
+    "lint": "ray lint",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "seed": "tsx scripts/seed.ts",
+    "publish": "ray publish"
+  },
+  "commands": [
+    {
+      "name": "manage",
+      "title": "Manage Blocked Websites",
+      "description": "Add, remove, and toggle websites or URL paths.",
+      "mode": "view"
+    },
+    {
+      "name": "toggle",
+      "title": "Toggle Website Blocking",
+      "description": "Enable or disable your entire website blocklist.",
+      "mode": "no-view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^2.6.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
