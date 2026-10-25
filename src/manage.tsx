@@ -124,8 +124,16 @@ export default function ManageBlockedWebsites() {
                 source: state.enabled ? Icon.Shield : Icon.Circle,
                 tintColor: state.enabled ? Color.Green : Color.SecondaryText,
               }}
-              title={state.enabled ? "Blocking is ON" : "Blocking is OFF"}
-              subtitle={state.enabled ? `${active} website rules active` : "All websites temporarily allowed"}
+              title={
+                state.rules.length === 0 ? "No websites blocked" : state.enabled ? "Blocking is ON" : "Blocking is OFF"
+              }
+              subtitle={
+                state.rules.length === 0
+                  ? "Add a website to get started"
+                  : state.enabled
+                    ? `${active} website rules active`
+                    : "All websites temporarily allowed"
+              }
               keywords={["enable", "disable", "toggle", "focus"]}
               actions={
                 <ActionPanel>

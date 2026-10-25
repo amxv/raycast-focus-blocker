@@ -4,7 +4,7 @@
 
 **Block the rabbit holes, not the rest of the internet.** Focus Blocker is a small, local-first website blocker you control from [Raycast](https://www.raycast.com/). Block a whole site or just one URL path, and turn your rules on or off in a keystroke.
 
-**YouTube Shorts is blocked by default.** Normal YouTube videos, search, subscriptions, and playlists still work.
+**Your blocklist starts empty.** Add only the websites you want to block. For example, you can block YouTube Shorts while keeping normal YouTube videos, search, subscriptions, and playlists available.
 
 ### Install (macOS)
 
@@ -32,7 +32,7 @@ Open Raycast and search for:
 | **Manage Blocked Websites** | Add, edit, remove, or individually pause websites and URL patterns. |
 | **Toggle Website Blocking** | Turn all blocking on/off instantly. Assign a hotkey in Raycast Settings. |
 
-Example rules:
+Optional example rules (none are enabled or installed by default):
 
 | Rule | Blocks | Still allows |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ Example rules:
 | `reddit.com` | Reddit and its subdomains | Other websites |
 | `https://example.com/feeds/*` | One distracting path | The rest of `example.com` |
 
-New rules take effect when the browser companion synchronizes with the Rust helper. To update later, rerun the installer, **reload the browser companion** under `chrome://extensions`, and **reimport the Raycast bundle** if needed. Existing rules are preserved.
+New rules take effect when the browser companion synchronizes with the Rust helper. To update later, rerun the installer, **reload the browser companion** under `chrome://extensions`, and **reimport the Raycast bundle** if needed. Existing rules are preserved, including any custom websites you have already blocked.
 
 ### How it works
 

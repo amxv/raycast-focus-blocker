@@ -12,7 +12,7 @@ export const STATE_DIR = process.env.FOCUS_BLOCKER_HOME || path.join(homedir(), 
 export const STATE_FILE = path.join(STATE_DIR, "state.json");
 export const BRIDGE_URL = "http://127.0.0.1:47846";
 
-// Both the release installer and Raycast use the same default blocklist.
+// Both the release installer and Raycast start with the same empty blocklist.
 const initialState = defaultState as BlockState;
 
 export async function readState(): Promise<BlockState> {

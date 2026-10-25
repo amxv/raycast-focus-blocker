@@ -12,6 +12,7 @@ FAKE_HOME="$TEMP/user-home"
 mkdir -p "$STAGE/bin" "$STAGE/raycast-extension" "$STAGE/browser-extension" "$STAGE/defaults" "$RELEASES" "$FAKE_HOME"
 
 cp "$ROOT/defaults/state.json" "$STAGE/defaults/state.json"
+grep -q '"rules": \[\]' "$STAGE/defaults/state.json"
 cp "$ROOT/browser-extension/manifest.json" "$STAGE/browser-extension/manifest.json"
 printf '{"name":"focus-blocker"}\n' > "$STAGE/raycast-extension/package.json"
 touch "$STAGE/raycast-extension/manage.js" "$STAGE/raycast-extension/toggle.js"
@@ -34,16 +35,33 @@ for arch in arm64 x86_64; do
   test -f "$FAKE_HOME/.local/share/focus-blocker/raycast-extension/manage.js"
   test -f "$FAKE_HOME/.local/share/focus-blocker/browser-extension/manifest.json"
   test -f "$FAKE_HOME/.config/focus-blocker/state.json"
+  grep -q '"rules": \[\]' "$FAKE_HOME/.config/focus-blocker/state.json"
   plutil -lint "$FAKE_HOME/Library/LaunchAgents/xyz.ashray.focus-blocker-bridge.plist" >/dev/null
   echo "PASS: $arch release selected, verified, and installed"
 done
 
-# An upgrade must never reset the user's blocklist.
-sed -i '' 's/"revision": 1/"revision": 222/' "$FAKE_HOME/.config/focus-blocker/state.json"
+# An upgrade must never reset the user's blocklist, including a rule that
+# happens to be an example shown in the public README.
+cat > "$FAKE_HOME/.config/focus-blocker/state.json" <<'EOF'
+{
+  "version": 1,
+  "revision": 222,
+  "enabled": true,
+  "rules": [
+    {
+      "id": "youtube-shorts",
+      "pattern": "https://www.youtube.com/shorts/*",
+      "regex": "^https:\\/\\/www\\.youtube\\.com/shorts/.*",
+      "enabled": true
+    }
+  ]
+}
+EOF
 HOME="$FAKE_HOME" FOCUS_BLOCKER_SKIP_LAUNCHD=1 \
 FOCUS_BLOCKER_RELEASE_BASE_URL="file://$RELEASES" bash "$ROOT/install.sh" > "$TEMP/reinstall.log" 2>&1
 grep -q '"revision": 222' "$FAKE_HOME/.config/focus-blocker/state.json"
-echo 'PASS: upgrade preserves the existing blocklist'
+grep -q '"id": "youtube-shorts"' "$FAKE_HOME/.config/focus-blocker/state.json"
+echo 'PASS: upgrade preserves an existing custom YouTube Shorts rule'
 
 # Corrupted assets are rejected before installation.
 printf 'tampered\n' >> "$RELEASES/focus-blocker-macos-arm64.tar.gz"
