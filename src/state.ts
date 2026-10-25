@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
+import defaultState from "../defaults/state.json";
 import { patternToRegex } from "./patterns";
 
 export type BlockRule = { id: string; pattern: string; regex: string; enabled: boolean };
@@ -11,19 +12,8 @@ export const STATE_DIR = process.env.FOCUS_BLOCKER_HOME || path.join(homedir(), 
 export const STATE_FILE = path.join(STATE_DIR, "state.json");
 export const BRIDGE_URL = "http://127.0.0.1:47846";
 
-const initialState: BlockState = {
-  version: 1,
-  revision: 1,
-  enabled: true,
-  rules: [
-    {
-      id: "youtube-shorts",
-      pattern: "https://www.youtube.com/shorts/*",
-      regex: patternToRegex("https://www.youtube.com/shorts/*"),
-      enabled: true,
-    },
-  ],
-};
+// Both the release installer and Raycast use the same default blocklist.
+const initialState = defaultState as BlockState;
 
 export async function readState(): Promise<BlockState> {
   try {

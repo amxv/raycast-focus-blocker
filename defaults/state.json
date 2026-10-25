@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "revision": 1,
+  "enabled": true,
+  "rules": [
+    {
+      "id": "youtube-shorts",
+      "pattern": "https://www.youtube.com/shorts/*",
+      "regex": "^https:\\/\\/www\\.youtube\\.com/shorts/.*",
+      "enabled": true
+    }
+  ]
+}

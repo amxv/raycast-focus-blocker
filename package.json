@@ -13,11 +13,12 @@
   "engines": {"node": ">=22.14.0"},
   "scripts": {
     "dev": "ray develop",
-    "build": "ray build -e dist",
+    "build": "ray build -e dist -o dist",
     "lint": "eslint src --max-warnings 0 && prettier --check \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "seed": "tsx scripts/seed.ts",
+    "check:versions": "node scripts/check-versions.cjs",
     "publish": "ray publish"
   },
   "commands": [

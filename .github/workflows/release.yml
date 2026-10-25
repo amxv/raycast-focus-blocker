@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: focus-blocker-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify version and release source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: node scripts/check-versions.cjs "$GITHUB_REF_NAME"
+      - run: npm ci
+      - run: npm run lint && npm run typecheck && npm test && npm run build
+
+  build:
+    needs: verify
+    name: macOS ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-15
+          - arch: x86_64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install JS dependencies
+        run: npm ci
+      - name: Build Raycast for import
+        run: npm run build
+      - name: Build optimized Rust bridge
+        run: cargo build --manifest-path bridge/Cargo.toml --release --locked
+      - name: Bundle release
+        run: bash scripts/package-release.sh "${{ matrix.arch }}" .release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: focus-blocker-${{ matrix.arch }}
+          path: .release/focus-blocker-macos-${{ matrix.arch }}.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: focus-blocker-*
+          merge-multiple: true
+          path: release
+      - name: Verify both architectures and generate SHA-256 manifest
+        run: |
+          test -s release/focus-blocker-macos-arm64.tar.gz
+          test -s release/focus-blocker-macos-x86_64.tar.gz
+          cd release
+          sha256sum focus-blocker-macos-*.tar.gz > SHA256SUMS.txt
+          sha256sum --check SHA256SUMS.txt
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            release/focus-blocker-macos-arm64.tar.gz \
+            release/focus-blocker-macos-x86_64.tar.gz \
+            release/SHA256SUMS.txt \
+            --title "Focus Blocker $TAG" \
+            --generate-notes --verify-tag

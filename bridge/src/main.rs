@@ -2,8 +2,7 @@
 //! This service never proxies, records, or receives visited URLs.
 
 use std::{
-    env,
-    fs,
+    env, fs,
     io::{Read, Write},
     net::{TcpListener, TcpStream},
     path::PathBuf,
@@ -81,7 +80,10 @@ fn serve(mut stream: TcpStream, shared: Arc<Shared>) {
     let Some(head) = std::str::from_utf8(&header[..length]).ok() else {
         return;
     };
-    if !head.contains("\r\n\r\n") || !head.contains(&format!("\r\nHost: 127.0.0.1:{PORT}\r\n")) && !head.contains(&format!("\r\nhost: 127.0.0.1:{PORT}\r\n")) {
+    if !head.contains("\r\n\r\n")
+        || !head.contains(&format!("\r\nHost: 127.0.0.1:{PORT}\r\n"))
+            && !head.contains(&format!("\r\nhost: 127.0.0.1:{PORT}\r\n"))
+    {
         let _ = response(&mut stream, "403 Forbidden", br#"{"error":"Invalid host"}"#);
         return;
     }
@@ -111,17 +113,17 @@ fn serve(mut stream: TcpStream, shared: Arc<Shared>) {
             .and_then(|s| s.strip_suffix(" HTTP/1.1"))
             .and_then(|s| s.parse::<u64>().ok());
         let Some(since) = since else {
-            let _ = response(&mut stream, "400 Bad Request", br#"{"error":"Invalid revision"}"#);
+            let _ = response(
+                &mut stream,
+                "400 Bad Request",
+                br#"{"error":"Invalid revision"}"#,
+            );
             return;
         };
         let deadline = Instant::now() + Duration::from_secs(20);
         let mut generation = shared.generation.lock().unwrap();
-        loop {
-            if let Ok((_, revision)) = read_config(&shared.config_path) {
-                if revision > since || Instant::now() >= deadline {
-                    break;
-                }
-            } else {
+        while let Ok((_, revision)) = read_config(&shared.config_path) {
+            if revision > since || Instant::now() >= deadline {
                 break;
             }
             let remaining = deadline.saturating_duration_since(Instant::now());
@@ -137,7 +139,11 @@ fn serve(mut stream: TcpStream, shared: Arc<Shared>) {
         }
         Err(error) => {
             eprintln!("Focus Blocker state unavailable: {error}");
-            let _ = response(&mut stream, "503 Service Unavailable", br#"{"error":"State unavailable"}"#);
+            let _ = response(
+                &mut stream,
+                "503 Service Unavailable",
+                br#"{"error":"State unavailable"}"#,
+            );
         }
     }
 }

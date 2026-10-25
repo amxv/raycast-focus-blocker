@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: TypeScript, Rust, and installer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate versions
+        run: npm run check:versions
+      - name: Check shell scripts
+        run: |
+          bash -n install.sh scripts/install-local.sh scripts/package-release.sh scripts/test-installer.sh
+          shellcheck install.sh scripts/install-local.sh scripts/package-release.sh scripts/test-installer.sh
+      - name: Lint TypeScript
+        run: npm run lint
+      - name: Type-check TypeScript
+        run: npm run typecheck
+      - name: Run TypeScript tests
+        run: npm test
+      - name: Build Raycast extension
+        run: npm run build
+      - name: Check Rust formatting and lints
+        run: |
+          cargo fmt --manifest-path bridge/Cargo.toml -- --check
+          cargo clippy --manifest-path bridge/Cargo.toml --locked --all-targets -- -D warnings
+      - name: Run Rust tests
+        run: cargo test --manifest-path bridge/Cargo.toml --locked
+
+  installer-smoke:
+    name: macOS offline installer smoke test
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test download, SHA-256, install, and upgrade
+        run: bash scripts/test-installer.sh
