@@ -30,6 +30,10 @@ You can set a hotkey for **Toggle Website Blocking** in Raycast Preferences > Ex
 
 The default rule is `https://www.youtube.com/shorts/*`. Only URLs on `www.youtube.com` whose path starts with `/shorts/` are blocked. Other paths, including `/watch`, `/results`, and `/feed/subscriptions`, are not matched.
 
+## License and Raycast compatibility
+
+This repository is licensed under **Apache License 2.0**, including the Raycast TypeScript code and the Rust bridge. Local builds and developer-mode installation work with this license. Raycast's Store manifest validator currently requires the literal `"MIT"` package license, so `ray lint` reports a schema error if used for Store submission; `npm run lint` checks the actual TypeScript/Prettier code instead. The project is intentionally not submitted to Raycast's Store. If the Store validator eventually accepts Apache 2.0, `ray lint` can be restored to the default lint script.
+
 ### Validation
 
 ```bash
