@@ -6,7 +6,7 @@
   "description": "Block distracting sites and specific URLs, with instant control from Raycast.",
   "icon": "icon.png",
   "author": "amxv",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "platforms": ["macOS"],
   "categories": ["Productivity"],
   "keywords": ["focus", "block websites", "youtube shorts", "distractions", "site blocker"],

@@ -2,7 +2,7 @@
 name = "focus-blocker-bridge"
 version = "1.0.0"
 edition = "2024"
-license = "MIT"
+license = "Apache-2.0"
 description = "Low-overhead local configuration bridge for Focus Blocker"
 
 [dependencies]
