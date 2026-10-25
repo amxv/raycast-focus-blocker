@@ -1,5 +1,7 @@
 # Focus Blocker
 
+[![CI](https://github.com/amxv/raycast-focus-blocker/actions/workflows/ci.yml/badge.svg)](https://github.com/amxv/raycast-focus-blocker/actions/workflows/ci.yml) [![Latest release](https://img.shields.io/github/v/release/amxv/raycast-focus-blocker)](https://github.com/amxv/raycast-focus-blocker/releases/latest)
+
 **Block the rabbit holes, not the rest of the internet.** Focus Blocker is a small, local-first website blocker you control from [Raycast](https://www.raycast.com/). Block a whole site or just one URL path, and turn your rules on or off in a keystroke.
 
 **YouTube Shorts is blocked by default.** Normal YouTube videos, search, subscriptions, and playlists still work.
@@ -17,9 +19,9 @@ Finish by importing the two included extensions:
 1. **Raycast:** Open *Raycast Settings → Extensions → + → Import Extension* and select `~/.local/share/focus-blocker/raycast-extension`.
 2. **Dia or Chrome:** Open `chrome://extensions`, enable *Developer mode*, select *Load unpacked*, and choose `~/.local/share/focus-blocker/browser-extension`.
 
-Install the browser companion separately in each Chromium browser where you want URL blocking. Raycast must be installed and signed in to import a local extension. **Safari and Windows/Linux are not supported.**
+**Tip:** Press `⌘⇧G` in either folder picker to paste the hidden `~/.local` path.
 
-> **Before this repository is made public:** The one-line installer and unauthenticated GitHub release downloads will not work outside accounts with repository access. Once the repository and a release are public, the command above works for everyone.
+Install the browser companion separately in each Chromium browser where you want URL blocking. Raycast must be installed and signed in to import a local extension. **Safari and Windows/Linux are not supported.**
 
 ### Everyday use
 

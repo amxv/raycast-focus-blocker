@@ -126,6 +126,7 @@ printf '  1. Raycast: open Settings > Extensions > + > Import Extension.\n'
 printf '     Select this folder: %s/raycast-extension\n\n' "$INSTALL_ROOT"
 printf '  2. Dia or Chrome: open chrome://extensions, enable Developer Mode,\n'
 printf '     click Load unpacked, and select: %s/browser-extension\n\n' "$INSTALL_ROOT"
+info 'Tip: Press Cmd+Shift+G in either folder picker to paste the hidden ~/.local path.'
 info 'In Raycast, search for "Manage Blocked Websites" or "Toggle Website Blocking".'
 info 'YouTube Shorts is blocked by default; regular videos are still allowed.'
 info 'For future updates, run this installer again and reload the browser extension.'
